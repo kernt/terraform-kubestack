@@ -1,0 +1,88 @@
+apiVersion: tekton.dev/v1alpha1
+kind: Task
+metadata:
+  name: terraform-run
+spec:
+  inputs:
+    resources:
+    - name: workspace
+      type: git
+      targetPath: infra
+    params:
+    - name: ops_or_apps
+      descriptions: Use ops- or apps terraform workspace.
+  volumes:
+    - name: kbst-pipeline-sa
+      secret:
+        secretName: kbst-pipeline-sa
+  steps:
+  - name: init
+    image: kubestack/cd:dev
+    command:
+    - terraform
+    args:
+    - init
+    envFrom:
+    - configMapRef:
+        name: env
+    workingDir: /workspace/infra
+    volumeMounts:
+    - name: kbst-pipeline-sa
+      mountPath: /secret
+    env:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /secret/kbst-demo-0bcfe263e937.json
+  - name: workspace
+    image: kubestack/cd:dev
+    command:
+    - terraform
+    args:
+    - workspace
+    - select
+    - "${inputs.params.ops_or_apps}"
+    envFrom:
+    - configMapRef:
+        name: env
+    workingDir: /workspace/infra
+    volumeMounts:
+    - name: kbst-pipeline-sa
+      mountPath: /secret
+    env:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /secret/kbst-demo-0bcfe263e937.json
+  - name: plan
+    image: kubestack/cd:dev
+    command:
+    - terraform
+    args:
+    - plan
+    - --input=false
+    - --out=tfplan
+    envFrom:
+    - configMapRef:
+        name: env
+    workingDir: /workspace/infra
+    volumeMounts:
+    - name: kbst-pipeline-sa
+      mountPath: /secret
+    env:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /secret/kbst-demo-0bcfe263e937.json
+  - name: apply
+    image: kubestack/cd:dev
+    command:
+    - terraform
+    args:
+    - apply
+    - --input=false
+    - tfplan
+    envFrom:
+    - configMapRef:
+        name: env
+    workingDir: /workspace/infra
+    volumeMounts:
+    - name: kbst-pipeline-sa
+      mountPath: /secret
+    env:
+    - name: GOOGLE_APPLICATION_CREDENTIALS
+      value: /secret/kbst-demo-0bcfe263e937.json
