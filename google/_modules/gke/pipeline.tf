@@ -3,13 +3,13 @@ resource "google_service_account" "pipeline" {
   project    = var.project
 }
 
-resource "google_project_iam_member" "log_writer" {
+resource "google_project_iam_member" "container_admin" {
   project = var.project
   role    = "roles/container.admin"
   member  = "serviceAccount:${google_service_account.pipeline.email}"
 }
 
-resource "google_project_iam_member" "log_writer" {
+resource "google_project_iam_member" "editor" {
   project = var.project
   role    = "roles/editor"
   member  = "serviceAccount:${google_service_account.pipeline.email}"
