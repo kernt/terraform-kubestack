@@ -24,14 +24,14 @@ resource "kubernetes_namespace" "pipeline" {
 
   # namespace metadata may change through the manifests
   # hence ignoring this for the terraform lifecycle
-  lifecycle {
-    ignore_changes = [metadata]
-  }
+  #lifecycle {
+  #  ignore_changes = [metadata]
+  #}
 
   depends_on = [module.node_pool]
 }
 
-resource "kubernetes_service_account" "example" {
+resource "kubernetes_service_account" "pipeline" {
   metadata {
     name      = "kbst-pipeline"
     namespace = kubernetes_namespace.pipeline.metadata[0].name
