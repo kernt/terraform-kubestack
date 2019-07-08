@@ -43,8 +43,10 @@ resource "kubernetes_secret" "pipeline" {
   }
 
   data = {
-    "id_rsa"     = tls_private_key.pipeline.private_key_openssh
-    "id_rsa.pub" = tls_private_key.pipeline.public_key_openssh
+    "private_key.pem" = tls_private_key.pipeline.private_key_pem
+    "public_key.pem"  = tls_private_key.pipeline.public_key_pem
+    "id_rsa"          = tls_private_key.pipeline.private_key_pem
+    "id_rsa.pub"      = tls_private_key.pipeline.public_key_openssh
   }
 }
 
