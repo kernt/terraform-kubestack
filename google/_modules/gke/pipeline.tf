@@ -63,6 +63,7 @@ resource "kubernetes_service_account" "pipeline" {
   }
 
   secret {
-    name = kubernetes_secret.pipeline.metadata.0.name
+    #name = kubernetes_secret.pipeline.metadata.0.name
+    name = "ssh-auth"
   }
 }
