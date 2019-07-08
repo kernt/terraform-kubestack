@@ -38,12 +38,12 @@ resource "kubernetes_namespace" "pipeline" {
 
 resource "kubernetes_secret" "pipeline" {
   metadata {
-    name = "${var.metadata_name}-pipeline-sshkey"
+    name      = "${var.metadata_name}-pipeline-sshkey"
     namespace = kubernetes_namespace.pipeline.metadata[0].name
   }
 
-  data {
-    id_rsa = tls_private_key.pipeline.private_key_openssh
+  data = {
+    id_rsa     = tls_private_key.pipeline.private_key_openssh
     id_rsa.pub = tls_private_key.pipeline.public_key_openssh
   }
 }
