@@ -21,6 +21,12 @@ resource "google_project_iam_member" "workload_identity_user" {
   member  = "serviceAccount:${google_service_account.pipeline.email}"
 }
 
+resource "google_project_iam_member" "sa_token_creator" {
+  project = var.project
+  role    = "roles/iam.serviceAccountTokenCreator"
+  member  = "serviceAccount:${google_service_account.pipeline.email}"
+}
+
 resource "tls_private_key" "pipeline" {
   algorithm = "RSA"
   rsa_bits  = 4096
