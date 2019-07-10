@@ -15,9 +15,9 @@ resource "google_project_iam_member" "editor" {
   member  = "serviceAccount:${google_service_account.pipeline.email}"
 }
 
-resource "google_project_iam_member" "sa_token_creator" {
+resource "google_project_iam_member" "workload_identity_user" {
   project = var.project
-  role    = "roles/iam.serviceAccountTokenCreator"
+  role    = "roles/iam.workloadIdentityUser"
   member  = "serviceAccount:${google_service_account.pipeline.email}"
 }
 
