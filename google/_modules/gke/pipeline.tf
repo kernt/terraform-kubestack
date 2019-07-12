@@ -1,5 +1,5 @@
 locals {
-  k8s_sa_email = "${var.project}.svc.id.goog[${kubernetes_namespace.pipeline.metadata[0].name }/${kubernetes_service_account.pipeline.metadata[0].name]}"
+  k8s_sa_email = "${var.project}.svc.id.goog[${kubernetes_namespace.pipeline.metadata[0].name}/${kubernetes_service_account.pipeline.metadata[0].name}]"
 }
 
 resource "google_service_account" "pipeline" {
