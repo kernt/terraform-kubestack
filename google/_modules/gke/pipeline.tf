@@ -1,3 +1,7 @@
+locals {
+  k8s_sa_email = "${var.project}.svc.id.goog[${kubernetes_namespace.pipeline.metadata[0].name }/${kubernetes_service_account.pipeline.metadata[0].name]}"
+}
+
 resource "google_service_account" "pipeline" {
   account_id = "${var.metadata_name}-pipeline"
   project    = var.project
@@ -6,25 +10,25 @@ resource "google_service_account" "pipeline" {
 resource "google_project_iam_member" "container_admin" {
   project = var.project
   role    = "roles/container.admin"
-  member  = "serviceAccount:${google_service_account.pipeline.email}"
+  member  = "serviceAccount:${local.k8s_sa_email}"
 }
 
 resource "google_project_iam_member" "editor" {
   project = var.project
   role    = "roles/editor"
-  member  = "serviceAccount:${google_service_account.pipeline.email}"
+  member  = "serviceAccount:${local.k8s_sa_email}"
 }
 
 resource "google_project_iam_member" "workload_identity_user" {
   project = var.project
   role    = "roles/iam.workloadIdentityUser"
-  member  = "serviceAccount:${google_service_account.pipeline.email}"
+  member  = "serviceAccount:${local.k8s_sa_email}"
 }
 
 resource "google_project_iam_member" "sa_token_creator" {
   project = var.project
   role    = "roles/iam.serviceAccountTokenCreator"
-  member  = "serviceAccount:${google_service_account.pipeline.email}"
+  member  = "serviceAccount:${local.k8s_sa_email}"
 }
 
 resource "tls_private_key" "pipeline" {
