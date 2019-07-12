@@ -9,4 +9,4 @@ then
     kubectl apply -f $1
 fi
 
-rm -f $KUBECONFIG
+#rm -f $KUBECONFIG
