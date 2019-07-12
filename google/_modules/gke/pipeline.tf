@@ -10,24 +10,18 @@ resource "google_service_account" "pipeline" {
 resource "google_project_iam_member" "container_admin" {
   project = var.project
   role    = "roles/container.admin"
-  member  = "serviceAccount:${local.k8s_sa_email}"
+  member  = "serviceAccount:${google_service_account.pipeline.email}"
 }
 
 resource "google_project_iam_member" "editor" {
   project = var.project
   role    = "roles/editor"
-  member  = "serviceAccount:${local.k8s_sa_email}"
+  member  = "serviceAccount:${google_service_account.pipeline.email}"
 }
 
 resource "google_project_iam_member" "workload_identity_user" {
   project = var.project
   role    = "roles/iam.workloadIdentityUser"
-  member  = "serviceAccount:${local.k8s_sa_email}"
-}
-
-resource "google_project_iam_member" "sa_token_creator" {
-  project = var.project
-  role    = "roles/iam.serviceAccountTokenCreator"
   member  = "serviceAccount:${local.k8s_sa_email}"
 }
 
